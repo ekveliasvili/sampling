@@ -15,7 +15,8 @@ Alter the code so that it is reproducible. Describe the changes you made to the 
 ```
 Sampling process occures twice in the simulation: first time when we ran primary contact tracing and second time - when we model secondary contact tracing.
 Sampling procedure in the attached model is as follows: 
-- first we calculate the total number of people who will get affected based on the set infection rate of 10%
+- first we calculate the total number of people who will get affected based on the set infection rate of 10% using the code below:
+infected_indices = np.random.choice(ppl.index, size=int(len(ppl) * ATTACK_RATE), replace=False)
 -then we randomly pick 20% of people who are considered succesfully traced back to the event where they got sick (using the formula np.random.rand(sum(ppl['infected'])))
 - third we execute the calculation of seconday tracing in which we take infected people and trace them back to the event, and if 2 or more infected people got infected in the same time at the same event, then other cases (if people visited the same event as well) will be traced back and assosiated with the the same source of infection()
 - third we execute the calculation of seconday tracing in which we take succesfully traced infected people and trace them back to the event, and if 2 or more infected people got infected in the same time at the same event, then other cases (if people visited the same event as well) will be traced back and assosiated with the the same source of infection( event_trace_counts[event_trace_counts >= SECONDARY_TRACE_THRESHOLD].index)
@@ -27,8 +28,9 @@ Sampling frame is all people who attented weddings and brunches
 I think we have binomial distribution in this model as it refers to the success/failure rate of succesful traces cases
 
 
-After running Pyhton script I noticed that the graph repeats the graphs from the blog. The model represents the same results as described in blog  - the true proportion of positive cases is lower than the observed proportion of the cases traced to the wedding
-
+The graph which I got after running the code looks different than the one in the blog
+](image-3.png)
+Graph above shows that infections occured in the weedings correspond with the level of secondary traced infections from the wedding. In the blog secondary tracing led to the higer number of occurances than the original infections occured at the wedding. It looks like the Pyhton code introduces less biases than the one in the original blog
 After that I have modified the script to 100 repetions and run it several times (some of the images are attached below)
 ![alt text](image.png) ![alt text](image-1.png)![alt text](image-2.png)
 While the mean distribution was aorun the same range between 15 and 25% of positive cases traced to wedding, every time I ran the code the graph was slighly different. In order to make sure that simulation is reproducible I have added random seed to allow the same graph to be produced every time someone uses the code
