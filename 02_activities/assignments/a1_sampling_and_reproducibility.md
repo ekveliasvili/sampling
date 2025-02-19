@@ -10,11 +10,30 @@ Modify the number of repetitions in the simulation to 100 (from the original 100
 
 Alter the code so that it is reproducible. Describe the changes you made to the code and how they affected the reproducibility of the script file. The output does not need to match Whitby’s original blogpost/graphs, it just needs to produce the same output when run multiple times
 
-# Author: YOUR NAME
+# Author: Evgenia Kveliashvili
 
 ```
-Please write your explanation here...
+Sampling process occures twice in the simulation: first time when we ran primary contact tracing and second time - when we model secondary contact tracing.
+Sampling procedure in the attached model is as follows: 
+- first we calculate the total number of people who will get affected based on the set infection rate of 10% using the code below:
+infected_indices = np.random.choice(ppl.index, size=int(len(ppl) * ATTACK_RATE), replace=False)
+-then we randomly pick 20% of people who are considered succesfully traced back to the event where they got sick (using the formula np.random.rand(sum(ppl['infected'])))
+- third we execute the calculation of seconday tracing in which we take infected people and trace them back to the event, and if 2 or more infected people got infected in the same time at the same event, then other cases (if people visited the same event as well) will be traced back and assosiated with the the same source of infection()
+- third we execute the calculation of seconday tracing in which we take succesfully traced infected people and trace them back to the event, and if 2 or more infected people got infected in the same time at the same event, then other cases (if people visited the same event as well) will be traced back and assosiated with the the same source of infection( event_trace_counts[event_trace_counts >= SECONDARY_TRACE_THRESHOLD].index)
 
+Sample size in primary tracing is 20% of the total infected people (which in turn is 10% of 1000 people), sample size of secondary tracing assumes that if 2 more people who succesfully traced to the same event, then other un traced people from the same event will traced to that event.
+
+Sampling frame is all people who attented weddings and brunches
+
+I think we have binomial distribution in this model as it refers to the success/failure rate of succesful traces cases
+
+
+The graph which I got after running the code looks different than the one in the blog
+](image-3.png)
+Graph above shows that infections occured in the weedings correspond with the level of secondary traced infections from the wedding. In the blog secondary tracing led to the higer number of occurances than the original infections occured at the wedding. It looks like the Pyhton code introduces less biases than the one in the original blog
+After that I have modified the script to 100 repetions and run it several times (some of the images are attached below)
+![alt text](image.png) ![alt text](image-1.png)![alt text](image-2.png)
+While the mean distribution was aorun the same range between 15 and 25% of positive cases traced to wedding, every time I ran the code the graph was slighly different. In order to make sure that simulation is reproducible I have added random seed to allow the same graph to be produced every time someone uses the code
 ```
 
 
@@ -39,9 +58,9 @@ Please write your explanation here...
     * Open a private window in your browser. Copy and paste the link to your pull request into the address bar. Make sure you can see your pull request properly. This helps the technical facilitator and learning support staff review your submission easily.
 
 Checklist:
-- [ ] Create a branch called `assignment-1`.
-- [ ] Ensure that the repository is public.
-- [ ] Review [the PR description guidelines](https://github.com/UofT-DSI/onboarding/blob/main/onboarding_documents/submissions.md#guidelines-for-pull-request-descriptions) and adhere to them.
-- [ ] Verify that the link is accessible in a private browser window.
+- [ x ] Create a branch called `assignment-1`.
+- [ x ] Ensure that the repository is public.
+- [ x ] Review [the PR description guidelines](https://github.com/UofT-DSI/onboarding/blob/main/onboarding_documents/submissions.md#guidelines-for-pull-request-descriptions) and adhere to them.
+- [ x ] Verify that the link is accessible in a private browser window.
 
 If you encounter any difficulties or have questions, please don't hesitate to reach out to our team via the help channel in Slack. Our Technical Facilitators and Learning Support staff are here to help you navigate any challenges.
